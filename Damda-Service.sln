@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Damda-Service", "Damda-Service.csproj", "{BAF95C66-40C2-4CA4-9888-2F3C48623D03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAF95C66-40C2-4CA4-9888-2F3C48623D03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAF95C66-40C2-4CA4-9888-2F3C48623D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAF95C66-40C2-4CA4-9888-2F3C48623D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAF95C66-40C2-4CA4-9888-2F3C48623D03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BCF3EE7C-6E2C-4133-87CC-BF0962AC7BBA}
+	EndGlobalSection
+EndGlobal
