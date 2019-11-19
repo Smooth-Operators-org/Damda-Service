@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,9 +17,9 @@ namespace Damda_Service.Models
         public string UserSerial { get; set; }
         public string UserEmail { get; set; }
         public string UserPhone { get; set; }
-        public string UserCreated { get; set; }
-        public int UserStatus { get; set; }
-        public int UserEnable{ get; set; }
+        public DateTime UserCreated { get; set; }
+        public bool UserStatus { get; set; }
+        public bool UserEnable { get; set; }
         public int PlanId { get; set; }
         public int LevelId { get; set; }
     }

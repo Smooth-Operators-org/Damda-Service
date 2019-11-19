@@ -33,7 +33,7 @@ namespace Damda_Service.Controllers
 
         // POST: Register
         [HttpPost("Register")]
-        public async Task<ActionResult<StatusResponse>> Register(UserRequest request)
+        public async Task<ActionResult> Register(UserRequest request)
         {
             try
             {

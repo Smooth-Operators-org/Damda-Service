@@ -15,7 +15,6 @@ namespace Damda_Service
 {
     public class Startup
     {
-        private readonly IConfiguration configuration;
         private readonly ILogger<Startup> logger;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
@@ -35,6 +34,7 @@ namespace Damda_Service
             services.AddHttpClient();
             services.AddScoped<UserService, UserService>();
             services.AddScoped<GroupService, GroupService>();
+            services.AddScoped<AuthService, AuthService>();
             services.AddScoped<Utilities, Utilities>();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         }

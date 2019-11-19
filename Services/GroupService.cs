@@ -41,16 +41,21 @@ namespace Damda_Service.Services
             return response;
         }
 
-        private async Task<bool> GroupExist(string userserial, string name)
+        public async Task<StatusResponse> PostGroupHasUsers(GroupHasUsersRequest request)
         {
-            if (await _context.Group.AnyAsync(x => x.UserSerial == userserial && x.GroupName == name))
+            var exist = await GroupHasUsersExist(request);
+            var response = new StatusResponse();
+
+            if (exist)
             {
-                return true;
+                response.message = "User Already Has Group";
             }
             else
             {
-                return false;
+                await GroupHasUsersRegiter(request);
+                response.message = "User Added to Group";
             }
+            return response;
         }
 
         private async Task<Group> GroupRegiter(GroupRequest request)
@@ -68,15 +73,18 @@ namespace Damda_Service.Services
                 GroupName = request.Name,
                 UserSerial = request.Creator
             };
-            var groupSettings = new GroupSettings
+
+            var groupHasUsersRequest = new GroupHasUsersRequest
             {
-                GroupSettingsAmount = request.Settings.Amount
+                Group = serial,
+                User = request.Creator
             };
 
             await _context.Group.AddAsync(group);
             await _context.SaveChangesAsync();
 
             await GroupSettingsRegiter(serial, request);
+            await PostGroupHasUsers(groupHasUsersRequest);
 
             return group;
 
@@ -94,7 +102,7 @@ namespace Damda_Service.Services
                 GroupSettingsBegin = beginDate,
                 GroupSettingsEnd = endDate,
                 GroupSettingsStatus = request.Settings.Status,
-                GroupSerial= serial,
+                GroupSerial = serial,
 
             };
 
@@ -103,6 +111,45 @@ namespace Damda_Service.Services
 
             return groupSettings;
 
+        }
+
+        private async Task<GroupHasUsers> GroupHasUsersRegiter(GroupHasUsersRequest groupHasUsersRequest)
+        {
+
+            var groupHasUsers = new GroupHasUsers
+            {
+                GroupSerial = groupHasUsersRequest.Group,
+                UserSerial = groupHasUsersRequest.User
+            };
+
+            await _context.GroupHasUsers.AddAsync(groupHasUsers);
+            await _context.SaveChangesAsync();
+
+            return groupHasUsers;
+
+        }
+        private async Task<bool> GroupExist(string userserial, string name)
+        {
+            if (await _context.Group.AnyAsync(x => x.UserSerial == userserial && x.GroupName == name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> GroupHasUsersExist(GroupHasUsersRequest request)
+        {
+            if (await _context.GroupHasUsers.AnyAsync(x => x.UserSerial == request.User && x.GroupSerial == request.Group))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Damda_Service.Controllers
     {
         private GroupService _groupService;
         private readonly DataContext _context;
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<GroupsController> _logger;
 
         public GroupsController(
             DataContext context,
             GroupService groupservice,
-            ILogger<UsersController> logger
+            ILogger<GroupsController> logger
 
             )
         {
@@ -34,7 +34,7 @@ namespace Damda_Service.Controllers
 
         // POST: Register
         [HttpPost("Register")]
-        public async Task<ActionResult<StatusResponse>> Register(GroupRequest request)
+        public async Task<ActionResult> Register(GroupRequest request)
         {
             try
             {

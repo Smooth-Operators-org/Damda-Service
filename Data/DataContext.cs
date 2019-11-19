@@ -9,6 +9,7 @@ namespace Damda_Service.Data
         public DbSet<User> User { get; set; }
         public DbSet<Group> Group { get; set; }
         public DbSet<GroupSettings> GroupSettings { get; set; }
+        public DbSet<GroupHasUsers> GroupHasUsers { get; set; }
 
     }
 }

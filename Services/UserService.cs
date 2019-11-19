@@ -29,7 +29,7 @@ namespace Damda_Service.Services
         public async Task<StatusResponse> PostUser(UserRequest request)
         {
 
-            var exist = await UserExist(request.Email);
+            var exist = await UserExist(request.Email.ToLower());
             var response = new StatusResponse();
 
             if (exist)
@@ -58,7 +58,9 @@ namespace Damda_Service.Services
             DateTime CreatedDate;
             request.Name = request.Name.ToLower();
             request.Lastname = request.Lastname.ToLower();
+            request.Email = request.Name.ToLower();
             DateTime.TryParseExact(request.Created, "yyyy/MM/dd", null, DateTimeStyles.None, out CreatedDate);
+            var dateCreated = DateTime.Parse(request.Created);
 
             var serial = _utilities.GenSerial();
 
@@ -75,7 +77,7 @@ namespace Damda_Service.Services
                 UserSerial = serial,
                 UserEmail = request.Email,
                 UserPhone = request.Phone,
-                UserCreated = request.Created,
+                UserCreated = dateCreated,
                 UserStatus = request.Status,
                 UserEnable = request.IsEnable,
                 PlanId = request.Plan,
