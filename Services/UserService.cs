@@ -58,7 +58,7 @@ namespace Damda_Service.Services
             DateTime CreatedDate;
             request.Name = request.Name.ToLower();
             request.Lastname = request.Lastname.ToLower();
-            request.Email = request.Name.ToLower();
+            request.Email = request.Email.ToLower();
             DateTime.TryParseExact(request.Created, "yyyy/MM/dd", null, DateTimeStyles.None, out CreatedDate);
             var dateCreated = DateTime.Parse(request.Created);
 
@@ -88,6 +88,84 @@ namespace Damda_Service.Services
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<StatusResponse> DeleteUser(string serial)
+        {
+            var response = new StatusResponse();
+            var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
+
+            if (user != null) 
+            {
+                _context.Remove(user);
+                await _context.SaveChangesAsync();
+
+                response.message = "User Deleted";
+                return response;
+            }
+
+            response.message = "User Not Found";
+            return response;
+        }
+
+        public async Task<StatusResponse> UpdateUser(string serial, UserInfo userinfo)
+        {
+            var response = new StatusResponse();
+            var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
+
+            if (user == null) 
+            {
+                response.message = "User not Found";
+                return response;
+            }
+
+            if (user.UserEmail != userinfo.Email)
+            {
+                var exist = await UserExist(userinfo.Email);
+
+                if (exist) 
+                {
+                    response.message = "Email Already Exist";
+                    return response;
+                }
+            }
+
+            user.UserName = userinfo.Name.ToLower();
+            user.UserLastname = userinfo.Lastname.ToLower();
+            user.UserEmail = userinfo.Email.ToLower();
+            user.UserPhone = userinfo.Phone;
+            user.PlanId = userinfo.Plan;
+            user.LevelId = userinfo.Level;
+            user.UserStatus = userinfo.Status;
+            user.UserEnable = userinfo.IsEnable;
+
+            response.message = "User Updated";
+
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+
+            return response;
+
+        }
+
+        public async Task<UserInfo> GetUserBySerial(string serial)
+        {
+
+            var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
+
+            var userInfo = new UserInfo
+            {
+                Name = user.UserName,
+                Lastname = user.UserLastname,
+                Email = user.UserEmail,
+                Serial = user.UserSerial,
+                Plan = user.PlanId,
+                Level = user.LevelId,
+                IsEnable = user.UserEnable
+            };
+
+            return userInfo;
+
         }
     }
 }

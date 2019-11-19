@@ -33,7 +33,7 @@ namespace Damda_Service.Controllers
 
         // POST: Register
         [HttpPost("Register")]
-        public async Task<ActionResult> Register(UserRequest request)
+        public async Task<ActionResult> RegisterUser(UserRequest request)
         {
             try
             {
@@ -47,68 +47,48 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{serial}")]
+        public async Task<ActionResult<User>> GetUserInfo(string serial)
         {
-            var user = await _context.User.FindAsync(id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                return Ok(await _userService.GetUserBySerial(serial));
             }
-
-            return user;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
         }
 
         // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("{serial}")]
+        public async Task<IActionResult> UpdateUser(string serial, [FromBody]UserInfo userinfo)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return Ok(await _userService.UpdateUser(serial, userinfo));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
             }
-
-            return NoContent();
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        [HttpDelete("{serial}")]
+        public async Task<ActionResult<User>> DeleteUser(string serial)
         {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                return Ok(await _userService.DeleteUser(serial));
             }
-
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.UserId == id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
         }
     }
 }

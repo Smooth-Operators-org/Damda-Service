@@ -36,7 +36,11 @@ namespace Damda_Service.Services
                     {
                         Name = user.UserName,
                         Lastname = user.UserLastname,
-                        Email = user.UserEmail
+                        Email = user.UserEmail,
+                        Serial = user.UserSerial,
+                        Plan = user.PlanId,
+                        Level = user.LevelId,
+                        IsEnable = user.UserEnable
                     };
                     return userInfo;
                 }
