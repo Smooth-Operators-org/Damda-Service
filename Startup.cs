@@ -28,21 +28,24 @@ namespace Damda_Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddHttpClient();
-            services.AddScoped<UserService, UserService>();
-            services.AddScoped<GroupService, GroupService>();
-            services.AddScoped<AuthService, AuthService>();
-            services.AddScoped<Utilities, Utilities>();
-            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-        }
+            services.AddCors(c =>
+                {
+                    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                    });
+                    services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+                    services.AddHttpClient();
+                    services.AddScoped<UserService, UserService>();
+                    services.AddScoped<GroupService, GroupService>();
+                    services.AddScoped<AuthService, AuthService>();
+                    services.AddScoped<Utilities, Utilities>();
+                    services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+                }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            app.UseMvc();
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+            {
+                app.UseMvc();
+                app.UseCors(options => options.AllowAnyOrigin());
+        }
         }
     }
-}

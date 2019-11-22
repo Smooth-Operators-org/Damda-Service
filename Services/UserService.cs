@@ -159,8 +159,10 @@ namespace Damda_Service.Services
                 Lastname = user.UserLastname,
                 Email = user.UserEmail,
                 Serial = user.UserSerial,
+                Phone = user.UserPhone,
                 Plan = user.PlanId,
                 Level = user.LevelId,
+                Status = user.UserStatus,
                 IsEnable = user.UserEnable
             };
 
