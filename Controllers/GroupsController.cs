@@ -54,19 +54,22 @@ namespace Damda_Service.Controllers
             return await _context.Group.ToListAsync();
         }
 
+        /*
         // GET: api/Groups/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Group>> GetGroup(int id)
+        [HttpGet("{serial}")]
+        public async Task<ActionResult<User>> GetGroupInfo(string serial)
         {
-            var @group = await _context.Group.FindAsync(id);
-
-            if (@group == null)
+            try
             {
-                return NotFound();
+                return Ok(await _groupService.GetGroupBySerial(serial));
             }
-
-            return @group;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
         }
+        */
 
         // PUT: api/Groups/5
         [HttpPut("{id}")]
