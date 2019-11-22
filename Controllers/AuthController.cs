@@ -12,7 +12,6 @@ namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowMyOrigin")]
     public class AuthController : ControllerBase
     {
         private readonly DataContext _context;
@@ -28,7 +27,6 @@ namespace Damda_Service.Controllers
             _context = context;
             _logger = logger;
         }
-
         [HttpPost("Login")]
         public async Task<ActionResult> Login(AuthLogin authLogin)
         {
