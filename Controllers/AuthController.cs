@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Damda_Service.Data;
 using Damda_Service.Models;
 using Damda_Service.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowMyOrigin")]
     public class AuthController : ControllerBase
     {
         private readonly DataContext _context;

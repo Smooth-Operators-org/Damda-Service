@@ -9,11 +9,13 @@ using Damda_Service.Data;
 using Damda_Service.Models;
 using Damda_Service.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowMyOrigin")]
     public class GroupsController : ControllerBase
     {
         private GroupService _groupService;
