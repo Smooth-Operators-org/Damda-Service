@@ -7,6 +7,9 @@ namespace Damda_Service.Utils
 {
     public class Utilities
     {
+        private object random;
+        private static Random code = new Random();
+
         public Utilities() { }
 
         public string GenSerial()
@@ -17,6 +20,13 @@ namespace Damda_Service.Utils
                 serial = String.Concat(serial, random.Next(6).ToString());
 
             return serial;
+        }
+        public string GenCouponCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 8)
+              .Select(s => s[code.Next(s.Length)]).ToArray());
+
         }
     }
 }

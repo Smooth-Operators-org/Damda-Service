@@ -13,9 +13,9 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Damda_Service.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowMyOrigin")]
+    [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
         private GroupService _groupService;

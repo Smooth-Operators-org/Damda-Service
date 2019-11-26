@@ -30,11 +30,13 @@ namespace Damda_Service
         {
                     services.AddCors();
                     services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+                    services.AddDbContext<CouponContext>(options => options.UseMySql(Configuration.GetConnectionString("Coupon")));
                     services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
                     services.AddHttpClient();
                     services.AddScoped<UserService, UserService>();
                     services.AddScoped<GroupService, GroupService>();
                     services.AddScoped<AuthService, AuthService>();
+                    services.AddScoped<CouponService, CouponService>();
                     services.AddScoped<Utilities, Utilities>();
                     services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
                 }
