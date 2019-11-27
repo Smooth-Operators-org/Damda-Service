@@ -151,29 +151,31 @@ namespace Damda_Service.Services
                 return false;
             }
         }
-        /*
-        public async Task<UserInfo> GetGroupBySerial(string serial)
+        
+        public async Task<GroupInfo> GetGroupBySerial(string serial)
         {
 
-            var user = await _context.Group.FirstOrDefaultAsync(x => x.UserSerial == serial);
+            var query = from u in _context.User
+                        join g in _context.GroupHasUsers on u.UserSerial equals g.UserSerial where g.GroupSerial == serial
+                        select new 
+                        {
+                            Serial = u.UserSerial,
+                            Name = u.UserName,
+                            LastName = u.UserLastname,
+                            IsEnable = u.UserEnable,
+                            Starus = u.UserStatus
+                        };
 
-            var userInfo = new GroupInfo
+            var users = query.ToArrayAsync();
+
+            var groupinfo = new GroupInfo
             {
-                Name = user.UserName,
-                Lastname = user.UserLastname,
-                Email = user.UserEmail,
-                Serial = user.UserSerial,
-                Phone = user.UserPhone,
-                Plan = user.PlanId,
-                Level = user.LevelId,
-                Status = user.UserStatus,
-                IsEnable = user.UserEnable
-            };
-           
-            return userInfo;
 
+
+            };
+            return groupinfo;
         }
-        */
+        
 
     }
 }

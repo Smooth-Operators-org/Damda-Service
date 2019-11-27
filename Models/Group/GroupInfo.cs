@@ -9,7 +9,7 @@ namespace Damda_Service.Models
     {
         public string Serial { get; set; }
         public string Name { get; set; }
-        public UserInfo[] Users { get; set; }
+        public object[] Users { get; set; }
 
     }
 }

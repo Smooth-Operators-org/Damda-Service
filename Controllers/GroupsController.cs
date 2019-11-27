@@ -50,13 +50,7 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Groups
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Group>>> GetGroup()
-        {
-            return await _context.Group.ToListAsync();
-        }
 
-        /*
         // GET: api/Groups/5
         [HttpGet("{serial}")]
         public async Task<ActionResult<User>> GetGroupInfo(string serial)
@@ -71,7 +65,6 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
-        */
 
         // PUT: api/Groups/5
         [HttpPut("{id}")]
