@@ -7,7 +7,6 @@ namespace Damda_Service.Utils
 {
     public class Utilities
     {
-        private object random;
         private static Random code = new Random();
 
         public Utilities() { }

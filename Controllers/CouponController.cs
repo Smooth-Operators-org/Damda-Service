@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowMyOrigin")]
     [ApiController]
     public class CouponController : ControllerBase
     {

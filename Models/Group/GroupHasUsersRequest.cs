@@ -9,7 +9,6 @@ namespace Damda_Service.Models
     public class GroupHasUsersRequest
     {
         public string Group { get; set; }
-        public string User { get; set; }
-        public int Position { get; set; }
+        public Dictionary<int, string> User { get; set; }
     }
 }

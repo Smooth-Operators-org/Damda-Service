@@ -10,5 +10,6 @@ namespace Damda_Service.Models
         public string Name { get; set; }
         public string Creator { get; set; }
         public GroupSettingRequest Settings { get; set; }
+        public Dictionary<int, string> Users { get; set; }
     }
 }

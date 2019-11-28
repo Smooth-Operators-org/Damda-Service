@@ -43,24 +43,19 @@ namespace Damda_Service.Services
 
         public async Task<StatusResponse> PostGroupHasUsers(GroupHasUsersRequest request)
         {
-            var exist = await GroupHasUsersExist(request);
+            var exist = await GroupHasUsersExist(request.User, request.Group);
             var response = new StatusResponse();
 
             if (exist)
             {
-                response.message = "User Already Has Group";
+                response.message = "User Already Has Group Or Position Is Taken";
             }
             else
             {
-                await GroupHasUsersRegiter(request);
+                await GroupHasUsersRegiter(request.Group, request.User);
                 response.message = "User Added to Group";
             }
             return response;
-        }
-
-        internal Task<object> PostUserToGroup(GroupRequest request)
-        {
-            throw new NotImplementedException();
         }
 
         private async Task<Group> GroupRegiter(GroupRequest request)
@@ -79,17 +74,11 @@ namespace Damda_Service.Services
                 UserSerial = request.Creator
             };
 
-            var groupHasUsersRequest = new GroupHasUsersRequest
-            {
-                Group = serial,
-                User = request.Creator
-            };
-
             await _context.Group.AddAsync(group);
             await _context.SaveChangesAsync();
 
             await GroupSettingsRegiter(serial, request);
-            await PostGroupHasUsers(groupHasUsersRequest);
+            await GroupHasUsersRegiter(serial, request.Users);
 
             return group;
 
@@ -118,20 +107,24 @@ namespace Damda_Service.Services
 
         }
 
-        private async Task<GroupHasUsers> GroupHasUsersRegiter(GroupHasUsersRequest groupHasUsersRequest)
+        private async Task<object> GroupHasUsersRegiter(string serial, Dictionary<int, string> users)
         {
 
-            var groupHasUsers = new GroupHasUsers
+            foreach (var user in users)
             {
-                GroupSerial = groupHasUsersRequest.Group,
-                UserSerial = groupHasUsersRequest.User,
-                GroupHasUserPosition = groupHasUsersRequest.Position
-            };
+                var groupHasUsers = new GroupHasUsers
+                {
+                    GroupSerial = serial,
+                    UserSerial = user.Value,
+                    GroupHasUserPosition = user.Key
+                };
 
-            await _context.GroupHasUsers.AddAsync(groupHasUsers);
+                await _context.GroupHasUsers.AddAsync(groupHasUsers);
+            }
+
             await _context.SaveChangesAsync();
 
-            return groupHasUsers;
+            return new StatusResponse { message = "User(s) Added To Group"};
 
         }
 
@@ -180,16 +173,17 @@ namespace Damda_Service.Services
 
         }
 
-        private async Task<bool> GroupHasUsersExist(GroupHasUsersRequest request)
+        private async Task<bool> GroupHasUsersExist(Dictionary<int, string> user, string group)
         {
-            if (await _context.GroupHasUsers.AnyAsync(x => x.UserSerial == request.User && x.GroupSerial == request.Group))
+            foreach (var u in user)
             {
-                return true;
+                if (await _context.GroupHasUsers.AnyAsync(x => x.UserSerial == u.Value && x.GroupSerial == group || x.GroupSerial == group && x.GroupHasUserPosition == u.Key))
+                {
+                    return true;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
+
         }
 
         private async Task<bool> GroupExist(string userserial, string name)

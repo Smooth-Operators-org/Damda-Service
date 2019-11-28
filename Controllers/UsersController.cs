@@ -14,7 +14,6 @@ namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowMyOrigin")]
     public class UsersController : ControllerBase
     {
         private UserService _userService;

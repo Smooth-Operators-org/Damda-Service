@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Cors;
 namespace Damda_Service.Controllers
 {
     [ApiController]
-    [EnableCors("AllowMyOrigin")]
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
@@ -55,7 +54,7 @@ namespace Damda_Service.Controllers
         {
             try
             {
-                return Ok(await _groupService.PostUserToGroup(request));
+                return Ok(await _groupService.PostGroupHasUsers(request));
             }
             catch (Exception ex)
             {
