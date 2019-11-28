@@ -119,7 +119,8 @@ namespace Damda_Service.Services
             var groupHasUsers = new GroupHasUsers
             {
                 GroupSerial = groupHasUsersRequest.Group,
-                UserSerial = groupHasUsersRequest.User
+                UserSerial = groupHasUsersRequest.User,
+                GroupHasUserPosition = groupHasUsersRequest.Position
             };
 
             await _context.GroupHasUsers.AddAsync(groupHasUsers);
@@ -128,16 +129,33 @@ namespace Damda_Service.Services
             return groupHasUsers;
 
         }
-        private async Task<bool> GroupExist(string userserial, string name)
+
+        public async Task<GroupInfo> GetGroupBySerial(string serial)
         {
-            if (await _context.Group.AnyAsync(x => x.UserSerial == userserial && x.GroupName == name))
+
+            var query = from u in _context.User
+                        join g in _context.GroupHasUsers 
+                        on u.UserSerial equals g.UserSerial
+                        where g.GroupSerial == serial && u.UserStatus == true
+                        orderby g.GroupHasUserPosition
+                        select new 
+                        {
+                            Position = g.GroupHasUserPosition,
+                            Serial = u.UserSerial,
+                            Name = u.UserName,
+                            LastName = u.UserLastname,
+                            IsEnable = u.UserEnable,
+                            Status = u.UserStatus
+                        };
+
+            var users = await query.ToListAsync();
+
+            var groupinfo = new GroupInfo
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+
+            };
+            return groupinfo;
         }
 
         private async Task<bool> GroupHasUsersExist(GroupHasUsersRequest request)
@@ -151,31 +169,17 @@ namespace Damda_Service.Services
                 return false;
             }
         }
-        
-        public async Task<GroupInfo> GetGroupBySerial(string serial)
+
+        private async Task<bool> GroupExist(string userserial, string name)
         {
-
-            var query = from u in _context.User
-                        join g in _context.GroupHasUsers on u.UserSerial equals g.UserSerial where g.GroupSerial == serial
-                        select new 
-                        {
-                            Serial = u.UserSerial,
-                            Name = u.UserName,
-                            LastName = u.UserLastname,
-                            IsEnable = u.UserEnable,
-                            Starus = u.UserStatus
-                        };
-
-            var users = query.ToArrayAsync();
-
-            var groupinfo = new GroupInfo
+            if (await _context.Group.AnyAsync(x => x.UserSerial == userserial && x.GroupName == name))
             {
-
-
-            };
-            return groupinfo;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        
-
     }
 }

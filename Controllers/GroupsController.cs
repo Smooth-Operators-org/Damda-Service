@@ -49,8 +49,6 @@ namespace Damda_Service.Controllers
             }
         }
 
-        // GET: api/Groups
-
         // GET: api/Groups/5
         [HttpGet("{serial}")]
         public async Task<ActionResult<User>> GetGroupInfo(string serial)
@@ -64,57 +62,6 @@ namespace Damda_Service.Controllers
                 _logger.LogError(ex, ex.Message);
                 return StatusCode(500, ex);
             }
-        }
-
-        // PUT: api/Groups/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroup(int id, Group @group)
-        {
-            if (id != @group.GroupId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(@group).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Groups/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Group>> DeleteGroup(int id)
-        {
-            var @group = await _context.Group.FindAsync(id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-
-            _context.Group.Remove(@group);
-            await _context.SaveChangesAsync();
-
-            return @group;
-        }
-
-        private bool GroupExists(int id)
-        {
-            return _context.Group.Any(e => e.GroupId == id);
         }
     }
 }

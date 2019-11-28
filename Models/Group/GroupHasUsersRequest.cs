@@ -10,5 +10,6 @@ namespace Damda_Service.Models
     {
         public string Group { get; set; }
         public string User { get; set; }
+        public int Position { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace Damda_Service.Models
         public int GroupHasUsersId { get; set; }
         public string GroupSerial { get; set; }
         public string UserSerial { get; set; }
+        public int GroupHasUserPosition { get; set; }
     }
 }
