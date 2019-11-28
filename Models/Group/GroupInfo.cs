@@ -8,8 +8,7 @@ namespace Damda_Service.Models
     public class GroupInfo
     {
         public string Serial { get; set; }
-        public string Name { get; set; }
-        public object[] Users { get; set; }
+        public List<object> List { get; set; }
 
     }
 }

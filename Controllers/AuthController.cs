@@ -34,7 +34,7 @@ namespace Damda_Service.Controllers
 
             try
             {
-                if (auth != null)
+                if (auth.GetType() == typeof(UserInfo))
                 {
                     return Ok(auth);
 

@@ -19,16 +19,18 @@ namespace Damda_Service.Services
             _context = context;
         }
 
-        public async Task<UserInfo> Login(AuthLogin authLogin)
+        public async Task<object> Login(AuthLogin authLogin)
         {
-            var response = new StatusResponse();
             var user = await _context.User.FirstOrDefaultAsync(x => x.UserEmail == authLogin.Email.ToLower());
 
             if (user != null)
             {
                 if (!VerifyPassword(authLogin.Password, user.UserPassword))
                 {
-                    return null;
+                    return new StatusResponse
+                    {
+                        message = "Bad Credentials"
+                    };
                 }
                 else
                 {
@@ -45,7 +47,11 @@ namespace Damda_Service.Services
                     return userInfo;
                 }
             }
-            return null;
+
+                return new StatusResponse
+                {
+                    message = "Bad Credentials"
+                };
         }
 
         private bool VerifyPassword(string password, string storedPassword)

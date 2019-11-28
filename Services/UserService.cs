@@ -95,7 +95,7 @@ namespace Damda_Service.Services
             var response = new StatusResponse();
             var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
 
-            if (user != null) 
+            if (user != null)
             {
                 _context.Remove(user);
                 await _context.SaveChangesAsync();
@@ -113,7 +113,7 @@ namespace Damda_Service.Services
             var response = new StatusResponse();
             var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
 
-            if (user == null) 
+            if (user == null)
             {
                 response.message = "User not Found";
                 return response;
@@ -123,7 +123,7 @@ namespace Damda_Service.Services
             {
                 var exist = await UserExist(userinfo.Email);
 
-                if (exist) 
+                if (exist)
                 {
                     response.message = "Email Already Exist";
                     return response;
@@ -148,26 +148,40 @@ namespace Damda_Service.Services
 
         }
 
-        public async Task<UserInfo> GetUserBySerial(string serial)
+        public async Task<object> GetUserBySerial(string serial)
         {
 
             var user = await _context.User.FirstOrDefaultAsync(x => x.UserSerial == serial);
 
-            var userInfo = new UserInfo
+            if (user != null)
             {
-                Name = user.UserName,
-                Lastname = user.UserLastname,
-                Email = user.UserEmail,
-                Serial = user.UserSerial,
-                Phone = user.UserPhone,
-                Plan = user.PlanId,
-                Level = user.LevelId,
-                Status = user.UserStatus,
-                IsEnable = user.UserEnable
-            };
 
-            return userInfo;
+                var userInfo = new UserInfo
+                {
+                    Name = user.UserName,
+                    Lastname = user.UserLastname,
+                    Email = user.UserEmail,
+                    Serial = user.UserSerial,
+                    Phone = user.UserPhone,
+                    Plan = user.PlanId,
+                    Level = user.LevelId,
+                    Status = user.UserStatus,
+                    IsEnable = user.UserEnable
+                };
 
+                return userInfo;
+
+            }
+
+            else
+            {
+
+                return new StatusResponse
+                {
+                    message = "User Not Found"
+                };
+
+            }
         }
     }
 }

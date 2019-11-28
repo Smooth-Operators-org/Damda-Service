@@ -50,7 +50,7 @@ namespace Damda_Service.Controllers
 
         // GET: api/Users/5
         [HttpGet("{serial}")]
-        public async Task<ActionResult<User>> GetUserInfo(string serial)
+        public async Task<ActionResult> GetUserInfo(string serial)
         {
             try
             {

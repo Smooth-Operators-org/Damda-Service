@@ -49,9 +49,24 @@ namespace Damda_Service.Controllers
             }
         }
 
+        // POST: Register
+        [HttpPost("AddUser")]
+        public async Task<ActionResult> AddUser(GroupHasUsersRequest request)
+        {
+            try
+            {
+                return Ok(await _groupService.PostUserToGroup(request));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
         // GET: api/Groups/5
         [HttpGet("{serial}")]
-        public async Task<ActionResult<User>> GetGroupInfo(string serial)
+        public async Task<ActionResult> GetGroupInfo(string serial)
         {
             try
             {

@@ -58,6 +58,11 @@ namespace Damda_Service.Services
             return response;
         }
 
+        internal Task<object> PostUserToGroup(GroupRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task<Group> GroupRegiter(GroupRequest request)
         {
             var serial = _utilities.GenSerial();
@@ -130,32 +135,49 @@ namespace Damda_Service.Services
 
         }
 
-        public async Task<GroupInfo> GetGroupBySerial(string serial)
+        public async Task<object> GetGroupBySerial(string serial)
         {
 
             var query = from u in _context.User
-                        join g in _context.GroupHasUsers 
+                        join g in _context.GroupHasUsers
                         on u.UserSerial equals g.UserSerial
-                        where g.GroupSerial == serial && u.UserStatus == true
+                        where g.GroupSerial == serial && u.UserStatus == true && u.UserEnable == true
                         orderby g.GroupHasUserPosition
-                        select new 
+                        select new
                         {
                             Position = g.GroupHasUserPosition,
                             Serial = u.UserSerial,
                             Name = u.UserName,
                             LastName = u.UserLastname,
-                            IsEnable = u.UserEnable,
-                            Status = u.UserStatus
                         };
 
             var users = await query.ToListAsync();
+            var usersList = new List<object>();
 
-            var groupinfo = new GroupInfo
+            if (users.Count > 0)
             {
 
+                foreach (object user in users)
+                {
+                    usersList.Add(user);
+                }
 
+                var groupInfo = new GroupInfo
+                {
+                    Serial = serial,
+                    List = usersList
+                };
+
+                return groupInfo;
+            }
+
+            var statusResponse = new StatusResponse
+            {
+                message = "Group Not Found"
             };
-            return groupinfo;
+
+            return statusResponse;
+
         }
 
         private async Task<bool> GroupHasUsersExist(GroupHasUsersRequest request)
