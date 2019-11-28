@@ -1,7 +1,6 @@
 ﻿using Damda_Service.Data;
 using Damda_Service.Models;
 using Damda_Service.Utils;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -148,6 +147,53 @@ namespace Damda_Service.Services
 
         }
 
+        public async Task<object> GetUserGroups(string serial)
+        {
+
+            var query = from gr in _context.Group
+                        join gh in _context.GroupHasUsers
+                        on gr.GroupSerial equals gh.GroupSerial
+                        join gs in _context.GroupSettings
+                        on gh.GroupSerial equals gs.GroupSerial
+                        where gh.UserSerial == serial
+                        orderby gs.GroupSettingsBegin
+                        select new
+                        {
+                            Group = gr.GroupSerial,
+                            Name = gr.GroupName,
+                            Begin = gs.GroupSettingsBegin,
+                            Amount = gs.GroupSettingsAmount,
+                            Status = gs.GroupSettingsStatus
+                        };
+
+            var groups = await query.ToListAsync();
+            var groupsList = new List<object>();
+
+            if (groups.Count > 0)
+            {
+
+                foreach (object group in groups)
+                {
+                    groupsList.Add(group);
+                }
+
+                var userHasGrouo = new UserHasGroups
+                {
+                    Serial = serial,
+                    List = groupsList
+                };
+
+                return userHasGrouo;
+            }
+
+            var statusResponse = new StatusResponse
+            {
+                message = "User Not Found"
+            };
+
+            return statusResponse;
+        }
+
         public async Task<object> GetUserBySerial(string serial)
         {
 
@@ -172,7 +218,6 @@ namespace Damda_Service.Services
                 return userInfo;
 
             }
-
             else
             {
 

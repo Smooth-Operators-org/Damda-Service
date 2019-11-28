@@ -48,6 +48,21 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Users/5
+        [HttpGet("{serial}/GetGroups")]
+        public async Task<ActionResult> GetUserGroups(string serial)
+        {
+            try
+            {
+                return Ok(await _userService.GetUserGroups(serial));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        // GET: api/Users/5
         [HttpGet("{serial}")]
         public async Task<ActionResult> GetUserInfo(string serial)
         {
@@ -76,6 +91,7 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
+
 
         // DELETE: api/Users/5
         [HttpDelete("{serial}")]
