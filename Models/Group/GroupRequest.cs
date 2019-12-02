@@ -8,8 +8,8 @@ namespace Damda_Service.Models
     public class GroupRequest
     {
         public string Name { get; set; }
-        public string Creator { get; set; }
+        public string User_Serial { get; set; }
         public GroupSettingRequest Settings { get; set; }
-        public Dictionary<int, string> Users { get; set; }
+        public Dictionary<int, UserInGroup> Users { get; set; }
     }
 }

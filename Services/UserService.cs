@@ -138,10 +138,10 @@ namespace Damda_Service.Services
             user.UserStatus = userinfo.Status;
             user.UserEnable = userinfo.IsEnable;
 
-            response.message = "User Updated";
 
             _context.User.Update(user);
             await _context.SaveChangesAsync();
+            response.message = "User Updated";
 
             return response;
 

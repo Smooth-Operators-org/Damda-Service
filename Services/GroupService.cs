@@ -26,7 +26,7 @@ namespace Damda_Service.Services
         public async Task<StatusResponse> PostGroup(GroupRequest request)
         {
             request.Name.ToLower();
-            var exist = await GroupExist(request.Creator, request.Name);
+            var exist = await GroupExist(request.User_Serial, request.Name);
             var response = new StatusResponse();
 
             if (exist)
@@ -58,6 +58,84 @@ namespace Damda_Service.Services
             return response;
         }
 
+        public async Task<object> UpdateGroup(string serial, GroupRequest request)
+        {
+            var response = new StatusResponse();
+
+            var group = await _context.Group.FirstOrDefaultAsync(x => x.GroupSerial == serial);
+
+            if (group == null)
+            {
+                response.message = "Group not Found";
+                return response;
+            }
+
+            var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.UserSerial == request.User_Serial && x.GroupSerial == serial);
+
+            if (user == null || user.RoleId == 2)
+            {
+                response.message = "Permission Denied";
+                return response;
+            }
+
+            var query = from gr in _context.Group
+                        join gh in _context.GroupHasUsers
+                        on gr.GroupSerial equals gh.GroupSerial
+                        where gh.UserSerial == serial && gr.GroupName == request.Name
+                        select new
+                        {
+                            Name = gr.GroupName
+                        };
+
+            var groups = await query.ToListAsync();
+
+            if (groups.Count > 0)
+            {
+                response.message = "Group name Already Exist";
+                return response;
+            }
+
+            var groupSettigns = await _context.GroupSettings.FirstOrDefaultAsync(x => x.GroupSerial == serial);
+            var endDate = request.Settings.Begin.AddDays(request.Settings.Timelapse * request.Users.Count());
+
+            group.GroupName = request.Name;
+            groupSettigns.GroupSettingsAmount = request.Settings.Amount;
+            groupSettigns.GroupSettingsBegin = request.Settings.Begin;
+            groupSettigns.GroupSettingsEnd = endDate;
+            groupSettigns.GroupSettingsStatus = request.Settings.Status;
+
+            _context.Group.Update(group);
+            _context.GroupSettings.Update(groupSettigns);
+            await _context.SaveChangesAsync();
+            response.message = "Group Updated";
+
+            return response;
+        }
+
+        public async Task<StatusResponse> DeleteGroup(string serial)
+        {
+            var response = new StatusResponse();
+            var group = await _context.Group.FirstOrDefaultAsync(x => x.GroupSerial == serial);
+            var groupSettings = await _context.GroupSettings.FirstOrDefaultAsync(x => x.GroupSerial == serial);
+
+            if (group != null && groupSettings != null)
+            {
+
+                var xs = _context.GroupHasUsers.Where(x => x.GroupSerial == serial).ToList();
+
+                _context.GroupHasUsers.RemoveRange(_context.GroupHasUsers.Where(x => x.GroupSerial == serial));
+                _context.GroupSettings.Remove(groupSettings);
+                _context.Group.Remove(group);
+                await _context.SaveChangesAsync();
+
+                response.message = "Group Deleted";
+                return response;
+            }
+
+            response.message = "Group Not Found";
+            return response;
+        }
+
         private async Task<Group> GroupRegiter(GroupRequest request)
         {
             var serial = _utilities.GenSerial();
@@ -71,7 +149,7 @@ namespace Damda_Service.Services
             {
                 GroupSerial = serial,
                 GroupName = request.Name,
-                UserSerial = request.Creator
+                UserSerial = request.User_Serial
             };
 
             await _context.Group.AddAsync(group);
@@ -87,8 +165,8 @@ namespace Damda_Service.Services
         {
 
             var beginDate = Convert.ToDateTime(request.Settings.Begin);
-
-            var endDate = beginDate.AddDays(request.Settings.Timelapse);
+            var users = request.Users.Count();
+            var endDate = beginDate.AddDays(request.Settings.Timelapse * users);
 
             var groupSettings = new GroupSettings
             {
@@ -107,7 +185,7 @@ namespace Damda_Service.Services
 
         }
 
-        private async Task<object> GroupHasUsersRegiter(string serial, Dictionary<int, string> users)
+        private async Task<object> GroupHasUsersRegiter(string serial, Dictionary<int, UserInGroup> users)
         {
 
             foreach (var user in users)
@@ -115,8 +193,9 @@ namespace Damda_Service.Services
                 var groupHasUsers = new GroupHasUsers
                 {
                     GroupSerial = serial,
-                    UserSerial = user.Value,
-                    GroupHasUserPosition = user.Key
+                    UserSerial = user.Value.Serial,
+                    GroupHasUserPosition = user.Key,
+                    RoleId = user.Value.Role
                 };
 
                 await _context.GroupHasUsers.AddAsync(groupHasUsers);
@@ -124,7 +203,7 @@ namespace Damda_Service.Services
 
             await _context.SaveChangesAsync();
 
-            return new StatusResponse { message = "User(s) Added To Group"};
+            return new StatusResponse { message = "User(s) Added To Group" };
 
         }
 
@@ -134,6 +213,8 @@ namespace Damda_Service.Services
             var query = from u in _context.User
                         join g in _context.GroupHasUsers
                         on u.UserSerial equals g.UserSerial
+                        join r in _context.Role
+                        on g.RoleId equals r.RoleId
                         where g.GroupSerial == serial && u.UserStatus == true && u.UserEnable == true
                         orderby g.GroupHasUserPosition
                         select new
@@ -142,6 +223,7 @@ namespace Damda_Service.Services
                             Serial = u.UserSerial,
                             Name = u.UserName,
                             LastName = u.UserLastname,
+                            Role = r.RoleName
                         };
 
             var users = await query.ToListAsync();
@@ -155,7 +237,7 @@ namespace Damda_Service.Services
                     usersList.Add(user);
                 }
 
-                var groupInfo = new GroupInfo
+                var groupInfo = new GroupList
                 {
                     Serial = serial,
                     List = usersList
@@ -173,11 +255,11 @@ namespace Damda_Service.Services
 
         }
 
-        private async Task<bool> GroupHasUsersExist(Dictionary<int, string> user, string group)
+        private async Task<bool> GroupHasUsersExist(Dictionary<int, UserInGroup> user, string group)
         {
             foreach (var u in user)
             {
-                if (await _context.GroupHasUsers.AnyAsync(x => x.UserSerial == u.Value && x.GroupSerial == group || x.GroupSerial == group && x.GroupHasUserPosition == u.Key))
+                if (await _context.GroupHasUsers.AnyAsync(x => x.UserSerial == u.Value.Serial && x.GroupSerial == group || x.GroupSerial == group && x.GroupHasUserPosition == u.Key))
                 {
                     return true;
                 }

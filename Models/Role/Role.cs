@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Damda_Service.Models
 {
-    public class GroupHasUsersRequest
+    public class Role
     {
-        public string Group { get; set; }
-        public Dictionary<int, UserInGroup> User { get; set; }
+        [Key]
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
     }
 }

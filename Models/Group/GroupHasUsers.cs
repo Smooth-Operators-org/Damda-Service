@@ -13,5 +13,6 @@ namespace Damda_Service.Models
         public string GroupSerial { get; set; }
         public string UserSerial { get; set; }
         public int GroupHasUserPosition { get; set; }
+        public int RoleId { get; set; }
     }
 }

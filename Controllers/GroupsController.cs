@@ -47,6 +47,21 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
+        
+        // PUT
+        [HttpPut("{serial}")]
+        public async Task<ActionResult> UpdateGroup(string serial, [FromBody]GroupRequest request)
+        {
+            try
+            {
+                return Ok(await _groupService.UpdateGroup(serial, request));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
 
         // POST: Register
         [HttpPost("AddUser")]
@@ -77,5 +92,21 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
+
+        // DELETE: api/Groups/5
+        [HttpDelete("{serial}")]
+        public async Task<ActionResult> DeleteGroup(string serial)
+        {
+            try
+            {
+                return Ok(await _groupService.DeleteGroup(serial));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 }

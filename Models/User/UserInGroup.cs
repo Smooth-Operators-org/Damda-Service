@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Damda_Service.Models
 {
-    public class GroupInfo
+    public class UserInGroup
     {
         public string Serial { get; set; }
-        public List<object> List { get; set; }
-
+        public int Role { get; set; }
     }
 }
