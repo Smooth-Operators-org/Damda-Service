@@ -120,7 +120,6 @@ namespace Damda_Service.Services
 
             if (group != null && groupSettings != null)
             {
-
                 var xs = _context.GroupHasUsers.Where(x => x.GroupSerial == serial).ToList();
 
                 _context.GroupHasUsers.RemoveRange(_context.GroupHasUsers.Where(x => x.GroupSerial == serial));
@@ -175,7 +174,6 @@ namespace Damda_Service.Services
                 GroupSettingsEnd = endDate,
                 GroupSettingsStatus = request.Settings.Status,
                 GroupSerial = serial,
-
             };
 
             await _context.GroupSettings.AddAsync(groupSettings);
@@ -227,14 +225,18 @@ namespace Damda_Service.Services
                         };
 
             var users = await query.ToListAsync();
-            var usersList = new List<object>();
+            var usersList = new List<UserInList>();
 
             if (users.Count > 0)
             {
 
-                foreach (object user in users)
+                foreach (var user in users)
                 {
-                    usersList.Add(user);
+                    var userInList = new UserInList
+                    {
+
+                    };
+                    usersList.Add(userInList);
                 }
 
                 var groupInfo = new GroupList

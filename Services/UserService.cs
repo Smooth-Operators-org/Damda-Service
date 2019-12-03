@@ -89,6 +89,11 @@ namespace Damda_Service.Services
             return user;
         }
 
+        internal Task<object> GetUserGroupList(string userSerial, string groupSerial)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<StatusResponse> DeleteUser(string serial)
         {
             var response = new StatusResponse();

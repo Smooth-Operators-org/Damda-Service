@@ -79,7 +79,7 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Groups/5
-        [HttpGet("{serial}")]
+        [HttpGet("getlist/{serial}")]
         public async Task<ActionResult> GetGroupInfo(string serial)
         {
             try
