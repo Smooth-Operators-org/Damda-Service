@@ -14,17 +14,14 @@ namespace Damda_Service.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly ILogger<AuthController> _logger;
         private readonly AuthService _authService;
         public AuthController(
-            DataContext context,
             AuthService authService,
             ILogger<AuthController> logger
             )
         {
             _authService = authService;
-            _context = context;
             _logger = logger;
         }
         [HttpPost("Login")]

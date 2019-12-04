@@ -17,17 +17,14 @@ namespace Damda_Service.Controllers
     public class CouponController : ControllerBase
     {
         private CouponService _couponService;
-        private readonly CouponContext _context;
         private readonly ILogger<CouponController> _logger;
 
         public CouponController(
-        CouponContext context,
         CouponService couponService,
         ILogger<CouponController> logger
         )
         {
             _couponService = couponService;
-            _context = context;
             _logger = logger;
         }
 

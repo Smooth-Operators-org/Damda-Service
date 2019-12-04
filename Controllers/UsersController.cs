@@ -17,16 +17,13 @@ namespace Damda_Service.Controllers
     public class UsersController : ControllerBase
     {
         private UserService _userService;
-        private readonly DataContext _context;
         private readonly ILogger<UsersController> _logger;
 
         public UsersController(
-            DataContext context,
             UserService userService,
             ILogger<UsersController> logger
         )
         {
-            _context = context;
             _userService = userService;
             _logger = logger;
 
@@ -78,12 +75,12 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Users/{serial}/group/{serial}
-        [HttpGet("getlist/{serial}/group/{serial}")]
-        public async Task<ActionResult> GetUserList(string UserSerial, String groupSerial)
+        [HttpGet("getlist/{userSerial}/{groupSerial}")]
+        public async Task<ActionResult> GetUserList(string userSerial, string groupSerial)
         {
             try
             {
-                return Ok(await _userService.GetUserGroupList(UserSerial, groupSerial));
+                return Ok(await _userService.GetUserGroupList(userSerial, groupSerial));
             }
             catch (Exception ex)
             {

@@ -18,18 +18,15 @@ namespace Damda_Service.Controllers
     public class GroupsController : ControllerBase
     {
         private GroupService _groupService;
-        private readonly DataContext _context;
         private readonly ILogger<GroupsController> _logger;
 
         public GroupsController(
-            DataContext context,
             GroupService groupservice,
             ILogger<GroupsController> logger
 
             )
         {
             _groupService = groupservice;
-            _context = context;
             _logger = logger;
         }
 

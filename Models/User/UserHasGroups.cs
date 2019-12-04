@@ -9,6 +9,6 @@ namespace Damda_Service.Models
     {
         public string Serial { get; set; }
 
-        public List<object> List { get; set; }
+        public List<GroupInfo> List { get; set; }
     }
 }

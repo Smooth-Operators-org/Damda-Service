@@ -89,7 +89,7 @@ namespace Damda_Service.Services
             return user;
         }
 
-        internal Task<object> GetUserGroupList(string userSerial, string groupSerial)
+        public async Task<object> GetUserGroupList(string userSerial, string groupSerial)
         {
             throw new NotImplementedException();
         }
@@ -162,7 +162,7 @@ namespace Damda_Service.Services
                         on gh.GroupSerial equals gs.GroupSerial
                         where gh.UserSerial == serial
                         orderby gs.GroupSettingsBegin
-                        select new
+                        select new GroupInfo
                         {
                             Group = gr.GroupSerial,
                             Name = gr.GroupName,
@@ -172,12 +172,12 @@ namespace Damda_Service.Services
                         };
 
             var groups = await query.ToListAsync();
-            var groupsList = new List<object>();
+            var groupsList = new List<GroupInfo>();
 
             if (groups.Count > 0)
             {
 
-                foreach (object group in groups)
+                foreach (GroupInfo group in groups)
                 {
                     groupsList.Add(group);
                 }

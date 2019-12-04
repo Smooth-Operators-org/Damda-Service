@@ -9,10 +9,8 @@ namespace Damda_Service.Models
     {
         public string Name { get; set; }
         public string Lastname { get; set; }
-        [StringLength(16, MinimumLength = 5, ErrorMessage = "Password Must be Between 5 and 16 Characters")]
         public string Password { get; set; }
         public string Email { get; set; }
-        [StringLength(11, MinimumLength = 8, ErrorMessage = "Phone Must be Between 8 and 11 Characters")]
         public string Phone { get; set; }
         public string Created { get; set; }
         public bool Status { get; set; }

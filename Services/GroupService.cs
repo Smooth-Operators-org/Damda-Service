@@ -45,8 +45,9 @@ namespace Damda_Service.Services
         {
             var exist = await GroupHasUsersExist(request.User, request.Group);
             var response = new StatusResponse();
+            var groupexist = await GetGroupBySerial(request.Group);
 
-            if (exist)
+            if (exist || groupexist.GetType() == typeof(StatusResponse))
             {
                 response.message = "User Already Has Group Or Position Is Taken";
             }
@@ -215,28 +216,28 @@ namespace Damda_Service.Services
                         on g.RoleId equals r.RoleId
                         where g.GroupSerial == serial && u.UserStatus == true && u.UserEnable == true
                         orderby g.GroupHasUserPosition
-                        select new
+                        select new UserInGroup
                         {
                             Position = g.GroupHasUserPosition,
                             Serial = u.UserSerial,
                             Name = u.UserName,
                             LastName = u.UserLastname,
-                            Role = r.RoleName
+                            Role = r.RoleId
                         };
 
             var users = await query.ToListAsync();
-            var usersList = new List<UserInList>();
+            var usersList = new List<UserInGroup>();
 
             if (users.Count > 0)
             {
 
                 foreach (var user in users)
                 {
-                    var userInList = new UserInList
+                    var userInGroup = new UserInGroup
                     {
 
                     };
-                    usersList.Add(userInList);
+                    usersList.Add(userInGroup);
                 }
 
                 var groupInfo = new GroupList

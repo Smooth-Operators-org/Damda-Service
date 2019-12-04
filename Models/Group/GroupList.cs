@@ -8,6 +8,6 @@ namespace Damda_Service.Models
     public class GroupList
     {
         public string Serial { get; set; }
-        public List<UserInList> List { get; set; }
+        public List<UserInGroup> List { get; set; }
     }
 }
