@@ -89,6 +89,27 @@ namespace Damda_Service.Services
             return user;
         }
 
+        public async Task<List<UserInfo>> GetAllUsers()
+        {
+            var query = from u in _context.User
+                        orderby u.UserName
+                        select new UserInfo
+                        {
+                            Name = u.UserName,
+                            Lastname = u.UserLastname,
+                            Email = u.UserEmail,
+                            Phone = u.UserPhone,
+                            Plan = u.PlanId,
+                            Level = u.LevelId,
+                            Status = u.UserStatus,
+                            IsEnable = u.UserEnable
+                        };
+
+            var users = await query.ToListAsync();
+
+            return users;
+        }
+
         public async Task<object> GetUserGroupList(string userSerial, string groupSerial)
         {
             throw new NotImplementedException();
