@@ -104,7 +104,6 @@ namespace Damda_Service.Controllers
             }
         }
 
-
         // DELETE: api/Users/5
         [HttpDelete("{serial}")]
         public async Task<ActionResult<User>> DeleteUser(string serial)

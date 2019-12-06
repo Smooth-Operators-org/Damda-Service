@@ -99,6 +99,17 @@ namespace Damda_Service.Services
             var groupSettigns = await _context.GroupSettings.FirstOrDefaultAsync(x => x.GroupSerial == serial);
             var endDate = request.Settings.Begin.AddDays(request.Settings.Timelapse * request.Users.Count());
 
+            foreach (var u in request.Users)
+            {
+                var member = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.UserSerial == u.Value.Serial);
+
+                member.GroupHasUserPosition = u.Value.Position;
+                member.GroupSerial = u.Value.Serial;
+                member.RoleId = u.Value.Role;
+
+                _context.GroupHasUsers.Update(member);
+            }
+
             group.GroupName = request.Name;
             groupSettigns.GroupSettingsAmount = request.Settings.Amount;
             groupSettigns.GroupSettingsBegin = request.Settings.Begin;
