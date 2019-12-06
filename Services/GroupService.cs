@@ -113,6 +113,25 @@ namespace Damda_Service.Services
             return response;
         }
 
+        public async Task<StatusResponse> DeleteUserInGroup(string groupSerial, string userSerial)
+        {
+            var response = new StatusResponse();
+            var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.GroupSerial == groupSerial && x.UserSerial == userSerial);
+
+            if (user != null)
+            {
+               _context.GroupHasUsers.Remove(user);
+               await _context.SaveChangesAsync();
+
+                response.message = "User Deleted";
+                return response;
+            }
+
+            response.message = "User Not Found";
+            return response;
+
+        }
+
         public async Task<StatusResponse> DeleteGroup(string serial)
         {
             var response = new StatusResponse();
@@ -121,7 +140,7 @@ namespace Damda_Service.Services
 
             if (group != null && groupSettings != null)
             {
-                var xs = _context.GroupHasUsers.Where(x => x.GroupSerial == serial).ToList();
+               // var xs = _context.GroupHasUsers.Where(x => x.GroupSerial == serial).ToList();
 
                 _context.GroupHasUsers.RemoveRange(_context.GroupHasUsers.Where(x => x.GroupSerial == serial));
                 _context.GroupSettings.Remove(groupSettings);
@@ -230,14 +249,9 @@ namespace Damda_Service.Services
 
             if (users.Count > 0)
             {
-
                 foreach (var user in users)
                 {
-                    var userInGroup = new UserInGroup
-                    {
-
-                    };
-                    usersList.Add(userInGroup);
+                    usersList.Add(user);
                 }
 
                 var groupInfo = new GroupList

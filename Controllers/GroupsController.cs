@@ -105,5 +105,19 @@ namespace Damda_Service.Controllers
             }
         }
 
+        [HttpDelete("{groupSerial}/user/{userSerial}")]
+        public async Task<ActionResult> DeleteUserGroup(string groupSerial, string userSerial)
+        {
+            try
+            {
+                return Ok(await _groupService.DeleteUserInGroup(groupSerial, userSerial));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 }
