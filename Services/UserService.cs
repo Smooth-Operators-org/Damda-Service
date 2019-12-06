@@ -93,6 +93,7 @@ namespace Damda_Service.Services
         {
             var query = from u in _context.User
                         orderby u.UserName
+                        where u.UserStatus == true
                         select new UserInfo
                         {
                             Name = u.UserName,
@@ -112,7 +113,12 @@ namespace Damda_Service.Services
 
         public async Task<object> GetUserGroupList(string userSerial, string groupSerial)
         {
-            throw new NotImplementedException();
+            var settigs = await _context.GroupSettings.FirstOrDefaultAsync(x => x.GroupSerial == groupSerial);
+            var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.GroupSerial == groupSerial && x.UserSerial == userSerial);
+            var payment = await _context.Payment.Where(x => x.GroupHasUsersId == user.GroupHasUsersId).ToListAsync();
+
+            return {};
+
         }
 
         public async Task<StatusResponse> DeleteUser(string serial)

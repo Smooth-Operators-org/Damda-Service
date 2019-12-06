@@ -75,5 +75,26 @@ namespace Damda_Service.Services
             return coupon;
         }
 
+        public async Task<List<CouponInfo>> GetAllCoupons()
+        {
+            var query = from c in _context.Coupon
+                        orderby c.CouponStart_Date
+                        select new CouponInfo
+                        {
+                            CouponCode = c.CouponCode,
+                            Start_Date = c.CouponStart_Date,
+                            End_Date = c.CouponEnd_Date,
+                            Type = c.CouponType,
+                            Porcent = c.CouponPorcent,
+                            Amount = c.CouponAmount,
+                            Platform = c.CouponPlatform,
+                            Plan = c.CouponPlan,
+                            Status = c.CouponStatus
+                        };
+
+            var coupons = await query.ToListAsync();
+
+            return coupons;
+        }
     }
 }

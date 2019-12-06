@@ -90,7 +90,7 @@ namespace Damda_Service.Controllers
         }
 
         // GET: api/Users/{serial}/group/{serial}
-        [HttpGet("getlist/{userSerial}/{groupSerial}")]
+        [HttpGet("getlist/user/{userSerial}/group/{groupSerial}")]
         public async Task<ActionResult> GetUserList(string userSerial, string groupSerial)
         {
             try

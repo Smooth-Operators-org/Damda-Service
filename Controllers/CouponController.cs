@@ -42,6 +42,21 @@ namespace Damda_Service.Controllers
             }
         }
 
+        // GET: api/Users/5
+        [HttpGet()]
+        public async Task<ActionResult> GetCoupons()
+        {
+            try
+            {
+                return Ok(await _couponService.GetAllCoupons());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 
 
