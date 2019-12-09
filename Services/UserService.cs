@@ -111,16 +111,6 @@ namespace Damda_Service.Services
             return users;
         }
 
-        public async Task<object> GetUserGroupList(string userSerial, string groupSerial)
-        {
-            var settigs = await _context.GroupSettings.FirstOrDefaultAsync(x => x.GroupSerial == groupSerial);
-            var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.GroupSerial == groupSerial && x.UserSerial == userSerial);
-            var payment = await _context.Payment.Where(x => x.GroupHasUsersId == user.GroupHasUsersId).ToListAsync();
-
-            return {};
-
-        }
-
         public async Task<StatusResponse> DeleteUser(string serial)
         {
             var response = new StatusResponse();

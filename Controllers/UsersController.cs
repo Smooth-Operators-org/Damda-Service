@@ -89,21 +89,6 @@ namespace Damda_Service.Controllers
             }
         }
 
-        // GET: api/Users/{serial}/group/{serial}
-        [HttpGet("getlist/user/{userSerial}/group/{groupSerial}")]
-        public async Task<ActionResult> GetUserList(string userSerial, string groupSerial)
-        {
-            try
-            {
-                return Ok(await _userService.GetUserGroupList(userSerial, groupSerial));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(500, ex);
-            }
-        }
-
         // PUT: api/Users/5
         [HttpPut("{serial}")]
         public async Task<IActionResult> UpdateUser(string serial, [FromBody]UserInfo userinfo)

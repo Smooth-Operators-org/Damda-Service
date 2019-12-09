@@ -14,14 +14,14 @@ namespace Damda_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CouponController : ControllerBase
+    public class CouponsController : ControllerBase
     {
         private CouponService _couponService;
-        private readonly ILogger<CouponController> _logger;
+        private readonly ILogger<CouponsController> _logger;
 
-        public CouponController(
+        public CouponsController(
         CouponService couponService,
-        ILogger<CouponController> logger
+        ILogger<CouponsController> logger
         )
         {
             _couponService = couponService;
@@ -42,7 +42,7 @@ namespace Damda_Service.Controllers
             }
         }
 
-        // GET: api/Users/5
+        // GET: api/Coupon/
         [HttpGet()]
         public async Task<ActionResult> GetCoupons()
         {

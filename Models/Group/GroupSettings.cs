@@ -15,5 +15,6 @@ namespace Damda_Service.Models
         public DateTime GroupSettingsEnd { get; set; }
         public int GroupSettingsStatus { get; set; }
         public string GroupSerial { get; set; }
+        public double GroupSettingsFrequency { get; set; }
     }
 }

@@ -37,6 +37,7 @@ namespace Damda_Service
                     services.AddScoped<GroupService, GroupService>();
                     services.AddScoped<AuthService, AuthService>();
                     services.AddScoped<CouponService, CouponService>();
+                    services.AddScoped<PaymentService, PaymentService>();
                     services.AddScoped<Utilities, Utilities>();
                     services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
                 }

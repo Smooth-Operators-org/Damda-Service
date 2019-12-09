@@ -115,6 +115,7 @@ namespace Damda_Service.Services
             groupSettigns.GroupSettingsBegin = request.Settings.Begin;
             groupSettigns.GroupSettingsEnd = endDate;
             groupSettigns.GroupSettingsStatus = request.Settings.Status;
+            groupSettigns.GroupSettingsFrequency = request.Settings.Timelapse;
 
             _context.Group.Update(group);
             _context.GroupSettings.Update(groupSettigns);
@@ -151,8 +152,6 @@ namespace Damda_Service.Services
 
             if (group != null && groupSettings != null)
             {
-               // var xs = _context.GroupHasUsers.Where(x => x.GroupSerial == serial).ToList();
-
                 _context.GroupHasUsers.RemoveRange(_context.GroupHasUsers.Where(x => x.GroupSerial == serial));
                 _context.GroupSettings.Remove(groupSettings);
                 _context.Group.Remove(group);
@@ -205,6 +204,7 @@ namespace Damda_Service.Services
                 GroupSettingsEnd = endDate,
                 GroupSettingsStatus = request.Settings.Status,
                 GroupSerial = serial,
+                GroupSettingsFrequency = request.Settings.Timelapse
             };
 
             await _context.GroupSettings.AddAsync(groupSettings);
