@@ -31,26 +31,34 @@ namespace Damda_Service.Services
             var users = await _context.GroupHasUsers.CountAsync(x => x.GroupSerial == groupSerial);
 
             var date = settings.GroupSettingsBegin;
-            var list = new PaymentList();
+            var list = new List<PaymentInfo>();
+            var item = new PaymentList();
 
 
-            for (var i = 1; i < users; i++)
+            for (var i = 1; i <= users; i++)
             {
-                if (i != user.GroupHasUserPosition)
+                if (i == user.GroupHasUserPosition)
                 {
-                    var payment = new PaymentInfo
-                    {
-                        Date = date.ToString(),
-                        Extension = date.AddDays(5).ToString(),
-                        Status = false,
-                        Amount = settings.GroupSettingsAmount,
-                        Received = 0.0,
-                    };
-                    list.root.Add(payment);
+                    continue;
                 }
+
+                var payment = new PaymentInfo
+                {
+                    Week = i,
+                    Date = date.ToString(),
+                    Extension = date.AddDays(5).ToString(),
+                    Status = false,
+                    Amount = settings.GroupSettingsAmount,
+                    Received = 0.0,
+                };
+                list.Add(payment);
+
                 date = date.AddDays(settings.GroupSettingsFrequency);
             }
-            return list;
+
+            item.root = list;
+
+            return item;
         }
 
     }
