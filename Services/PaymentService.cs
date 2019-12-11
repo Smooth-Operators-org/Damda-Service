@@ -65,8 +65,6 @@ namespace Damda_Service.Services
         {
 
             var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.GroupSerial == request.Group_Serial && x.UserSerial == request.User_Serial);
-            var payments = await _context.Payment.Where(x => x.GroupHasUsersId == user.GroupHasUsersId).ToListAsync();
-
 
             if (user != null)
             {
