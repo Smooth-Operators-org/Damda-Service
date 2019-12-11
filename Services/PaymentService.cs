@@ -61,5 +61,50 @@ namespace Damda_Service.Services
             return item;
         }
 
+        public async Task<object> PostPayment(PaymentRequest request)
+        {
+
+            var user = await _context.GroupHasUsers.FirstOrDefaultAsync(x => x.GroupSerial == request.Group_Serial && x.UserSerial == request.User_Serial);
+            var payments = await _context.Payment.Where(x => x.GroupHasUsersId == user.GroupHasUsersId).ToListAsync();
+
+
+            if (user != null)
+            {
+                var date = DateTime.Parse(request.Payment_Date);
+                var extension = DateTime.Parse(request.Extension_Date);
+                var payed = DateTime.Parse(request.Payed_Date);
+                var amount = request.Amount;
+                var receivedAmount = request.Received;
+                var status = false;
+
+                if (payed <= extension && receivedAmount >= amount)
+                {
+                    status = true;
+                }
+
+                var payment = new Payment
+                {
+                    PaymentDate = date,
+                    PaymentStatus = status,
+                    PaymentAmount = amount,
+                    PaymentReceived = receivedAmount,
+                    PaymentExtension = extension,
+                    GroupHasUsersId = user.GroupHasUsersId
+                };
+
+                await _context.Payment.AddAsync(payment);
+                await _context.SaveChangesAsync();
+
+                return (new StatusResponse
+                {
+                    message = "Payment Successful"
+                });
+            }
+
+            return (new StatusResponse
+            {
+                message = "User Not Found"
+            });
+        }
     }
 }

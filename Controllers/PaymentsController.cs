@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Damda_Service.Models;
 using Damda_Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,5 +41,20 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
+
+        [HttpPost("Register")]
+        public async Task<ActionResult> RegisterUser(PaymentRequest request)
+        {
+            try
+            {
+                return Ok(await _paymentService.PostPayment(request));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 }
