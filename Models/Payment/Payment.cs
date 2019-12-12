@@ -16,5 +16,6 @@ namespace Damda_Service.Models
         public double PaymentAmount { get; set; }
         public double PaymentReceived { get; set; }
         public int GroupHasUsersId { get; set; }
+        public int PaymentWeek { get; set; }
     }
 }

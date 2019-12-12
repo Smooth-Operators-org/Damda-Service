@@ -7,6 +7,6 @@ namespace Damda_Service.Models
 {
     public class PaymentList
     {
-         public List<PaymentInfo> root { get; set; }
+         public Dictionary<int, PaymentInfo> root { get; set; }
     }
 }
