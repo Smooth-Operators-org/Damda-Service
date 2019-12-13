@@ -31,6 +31,7 @@ namespace Damda_Service
                     services.AddCors();
                     services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
                     services.AddDbContext<CouponContext>(options => options.UseMySql(Configuration.GetConnectionString("Coupon")));
+                    services.AddDbContext<UserContext>(options => options.UseMySql(Configuration.GetConnectionString("User")));
                     services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
                     services.AddHttpClient();
                     services.AddScoped<UserService, UserService>();
