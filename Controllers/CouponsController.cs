@@ -56,6 +56,19 @@ namespace Damda_Service.Controllers
                 return StatusCode(500, ex);
             }
         }
+        [HttpDelete("remove/{serial}")]
+        public async Task<ActionResult> DeleteCoupons(string serial)
+        {
+            try
+            {
+                return Ok(await _couponService.DeleteCoupon(serial));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
 
     }
 

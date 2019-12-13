@@ -75,6 +75,24 @@ namespace Damda_Service.Services
             return coupon;
         }
 
+        public async Task<StatusResponse> DeleteCoupon(string serial)
+        {
+            var response = new StatusResponse();
+            var coupon = await _context.Coupon.FirstOrDefaultAsync(x => x.CouponCode == serial);
+
+            if (coupon != null)
+            {
+                _context.Remove(coupon);
+                await _context.SaveChangesAsync();
+
+                response.message = "Coupon Deleted";
+                return response;
+            }
+
+            response.message = "Coupun Not Found";
+            return response;
+        }
+
         public async Task<List<CouponInfo>> GetAllCoupons()
         {
             var query = from c in _context.Coupon
