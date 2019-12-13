@@ -100,6 +100,7 @@ namespace Damda_Service.Services
                             Lastname = u.UserLastname,
                             Email = u.UserEmail,
                             Phone = u.UserPhone,
+                            Serial = u.UserSerial,
                             Plan = u.PlanId,
                             Level = u.LevelId,
                             Status = u.UserStatus,

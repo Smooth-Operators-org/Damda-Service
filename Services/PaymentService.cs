@@ -116,7 +116,7 @@ namespace Damda_Service.Services
                             status = true;
                         }
 
-                        var payment = new Payment
+                        var item = new Payment
                         {
                             PaymentDate = date,
                             PaymentStatus = status,
@@ -127,7 +127,7 @@ namespace Damda_Service.Services
                             PaymentWeek = request.Week
                         };
 
-                        await _context.Payment.AddAsync(payment);
+                        await _context.Payment.AddAsync(item);
                         await _context.SaveChangesAsync();
 
                         return (new StatusResponse
@@ -148,45 +148,25 @@ namespace Damda_Service.Services
         }
         public async Task<object> UpdatePayment(PaymentRequest request, GroupHasUsers user, Payment payment)
         {
+            var payed = DateTime.Parse(request.Payed_Date);
+            var receivedAmount = request.Received;
+            var status = payment.PaymentStatus;
 
-            if (exist == null)
+
+            if (payed <= payment.PaymentExtension && receivedAmount >= payment.PaymentAmount)
             {
-
-                var date = DateTime.Parse(request.Payment_Date);
-                var extension = DateTime.Parse(request.Extension_Date);
-                var payed = DateTime.Parse(request.Payed_Date);
-                var amount = request.Amount;
-                var receivedAmount = request.Received;
-                var status = false;
-
-                if (payed <= extension && receivedAmount >= amount)
-                {
-                    status = true;
-                }
-
-                var payment = new Payment
-                {
-                    PaymentDate = date,
-                    PaymentStatus = status,
-                    PaymentAmount = amount,
-                    PaymentReceived = receivedAmount,
-                    PaymentExtension = extension,
-                    GroupHasUsersId = user.GroupHasUsersId,
-                    PaymentWeek = request.Week
-                };
-
-                await _context.Payment.AddAsync(payment);
-                await _context.SaveChangesAsync();
-
-                return (new StatusResponse
-                {
-                    message = "Payment Successful"
-                });
+                status = true;
             }
+
+            payment.PaymentStatus = status;
+            payment.PaymentReceived = request.Received;
+ 
+            _context.Update(payment);
+            await _context.SaveChangesAsync();
 
             return (new StatusResponse
             {
-                message = "User Not Found"
+                message = "Payment Updated"
             });
         }
     }
